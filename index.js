@@ -1,14 +1,18 @@
 // generate events
 var eventDates = {}
-let day1 = formatDate(new Date(new Date().setMonth(new Date().getMonth() + 1)))
-eventDates[day1] = [
-    'Event 1, Location',
-    'Event 2, Location 2'
-]
-let day2 = formatDate(new Date(new Date().setDate(new Date().getDate() + 40)))
-eventDates[day2] = [
-    'Event 2, Location 3',
-]
+// let day1 = formatDate(new Date(new Date().setMonth(new Date().getMonth() + 1)))
+// eventDates[day1] = [
+//     'Event 1, Location',
+//     'Event 2, Location 2'
+// ]
+// let day2 = formatDate(new Date(new Date().setDate(new Date().getDate() + 40)))
+// eventDates[day2] = [
+//     'Event 2, Location 3',
+// ]
+
+// Create a new Date object
+let currentDate = new Date();
+
 
 // set maxDates
 var maxDate = {
@@ -20,18 +24,13 @@ var maxDate = {
 var flatpickr = $('#calendar .placeholder').flatpickr({
     inline: true,
     minDate: 'today',
-    maxDate: maxDate[3]
-    ,
+    maxDate: maxDate[3],
     showMonths: 1,
-    enable: Object.keys(eventDates),
+    defaultDate: currentDate,
+    enable: getNextDates(14),
     disableMobile: "true",
     onChange: function (date, str, inst) {
         var contents = '';
-        if (date.length) {
-            for (i = 0; i < eventDates[str].length; i++) {
-                contents += '<div class="event"><div class="date">' + flatpickr.formatDate(date[0], 'l J F') + '</div><div class="location">' + eventDates[str][i] + '</div></div>';
-            }
-        }
         $('#calendar .calendar-events').html(contents)
     },
     locale: {
@@ -80,4 +79,17 @@ function formatDate(date) {
     let m = date.getMonth() + 1; //Month from 0 to 11
     let y = date.getFullYear();
     return '' + y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+}
+
+// Define a function that takes a number of days as an argument
+function getNextDates(days) {
+    let dates = [];
+    let currentDate = new Date();
+    for (let i = 0; i < days; i++) {
+        currentDate.setDate(currentDate.getDate() + 1);
+        let nextDate = new Date(currentDate);
+        dates.push(nextDate);
+    }
+
+    return dates;
 }
